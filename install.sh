@@ -5,7 +5,7 @@ set -o errexit
 
 if [ -z $(echo $(pgrep Xorg)) ]; then
     echo 'ERROR: Xorg server is not running, exit'
-    # exit 1
+    exit 1
 fi
 
 github_url='https://raw.githubusercontent.com/avsigaev/fan-control'
@@ -15,6 +15,7 @@ wget -q ${github_url}/${branch}/fan-control.txt -O /etc/sonm/fan-control.txt
 wget -q ${github_url}/${branch}/sonm-fan.service -O /etc/systemd/system/sonm-fan.service
 wget -q ${github_url}/${branch}/fan-control.sh -O /usr/bin/fan-control.sh
 
+echo Enabling service
 systemctl daemon-reload
 systemctl enable sonm-fan.service
 systemctl restart sonm-fan.service
