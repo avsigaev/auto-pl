@@ -8,7 +8,6 @@ DefaultDependencies=no
 ExecStart=/usr/bin/fan-control.sh
 
 # starts only on system boot
-Restart=never
 
 [Install]
 WantedBy=multi-user.target
