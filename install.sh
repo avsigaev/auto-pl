@@ -3,6 +3,11 @@
 # Exit script as soon as a command fails.
 set -o errexit
 
+if [ -n $(echo $(pgrep Xorg)) ]; then
+    echo 'ERROR: Xorg server is not running, exit'
+    exit 1
+fi
+
 github_url='https://raw.githubusercontent.com/avsigaev/fan-control'
 branch='master'
 
