@@ -7,7 +7,7 @@ if [ -z $(pgrep Xorg) ]; then
     echo 'ERROR: Xorg server is not running, exit'
     exit 1
 else 
-	echo 'Xorg is running, OK'
+    echo 'Xorg is running, OK'
 fi
 
 github_url='https://raw.githubusercontent.com/avsigaev/fan-control'
