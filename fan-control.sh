@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ -n $(pgrep Xorg) ]; then
+if [ -z $(pgrep Xorg) ]; then
     echo 'ERROR: Xorg server is not running, exit'
     exit 1
 fi
