@@ -17,6 +17,8 @@ wget -q ${github_url}/${branch}/fan-control.txt -O /etc/sonm/fan-control.txt
 wget -q ${github_url}/${branch}/sonm-fan.service -O /etc/systemd/system/sonm-fan.service
 wget -q ${github_url}/${branch}/fan-control.sh -O /usr/bin/fan-control.sh
 
+chmod +x /usr/bin/fan-control.sh
+
 echo Enabling service
 systemctl daemon-reload
 systemctl enable sonm-fan.service
