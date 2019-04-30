@@ -1,0 +1,14 @@
+[Unit]
+Description=Generate XOrg config to enable fan control on Nvidia cards
+Before=sonm-mon.service
+Before=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sonm-xorg-config.sh
+
+# starts only on system boot
+
+[Install]
+WantedBy=sonm-mon.service
+WantedBy=multi-user.target
