@@ -30,5 +30,6 @@ systemctl daemon-reload
 systemctl enable sonm-fan-control.service
 systemctl enable sonm-xorg-config.service
 systemctl restart sonm-mon.service
+systemctl start sonm-fan-control.service
 
 echo Done
