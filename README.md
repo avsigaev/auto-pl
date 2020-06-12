@@ -1,38 +1,28 @@
-Nvidia fan and PL control service to keep the temperature in the specified range.
-
-Suitable only for:
-- Nvidia GPUs;
-- Sonm OS.
+Nvidia power limit control service to keep the temperature in the specified range.
 
 # Installation
 
-`sudo bash -c "$(curl -s https://raw.githubusercontent.com/sonm-io/fan-control/master/install.sh)"`
-
-## Adjusting temperature range
-
-By default:
-- MIN fan speed = 40% (when GPU temp is below MIN temp),
-- MIN temp=50˚C, 
-- MAX temp=70˚C (fan speed will be set to 100 if temperature rises above this value),
-- Between MIN and MAX fan speed adjust graguatelly,
-- CRITICAL GPU temp = 85˚C (when GPU temp exceed this value, script initiates force reboot).
+`sudo bash -c "$(curl -s https://raw.githubusercontent.com/avsigaev/auto-pl/master/install.sh)"`
 
 ## Flexible power limit
 
 Flexible PL is enabled by default. You may disable it in the config.
 
 On service start, GPU power limit adjust to MAX_PL (% from default PL for particular GPU based on driver settings).
-Once GPU temp encreases [MAX_TEMP + 5˚C] , PL will be decreased, step by step, to force GPU temp down below this value, until MIN_PL (% from default PL for particular GPU, based on driver settings).
+Once GPU temp encreases MAX_TEMP, PL will be decreased, step by step, to force GPU temp down below this value, until MIN_PL (% from default PL for particular GPU, based on driver settings).
 When GPU temp drops below MAX temp, PL will be increased, step by step, until MAX_PL.
+Please note that PL adjustment works on every 3rd check. For checks 1-2 you can see only warning in the logs. Therefore, choose time interval between checks carefully: for instance, by default (delay 5 sec), PL adjustment will work every 15 seconds.
 
 Default settings:
+- MAX_TEMP=70˚C (PL will be decreased if temperature rises above this value),
 - MANAGE_PL=1 (on)
 - MAX_PL=85 (%)
 - MIN_PL=60 (%)
 - PL_CHANGE_STEP=5 (watt)
+- DELAY=5 (seconds between checks)
 
 ## Configuration file
 
-You may change all settings mentioned above, in `/etc/sonm/fan-control.cfg`
+You may change all settings mentioned above, in `/etc/sonm/auto-pl.cfg`
 
-Service will handle config change, and apply new settings.
+Service will handle config change, and apply new settings on-the-fly (no need to restart the service).
