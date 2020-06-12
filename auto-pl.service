@@ -1,0 +1,13 @@
+[Unit]
+Description=Auto-PL script for NVIDIA GPUs (see /etc/sonm/auto-pl.cfg for options)
+Before=multi-user.target
+
+[Service]
+Type=simple
+ExecStartPre=/bin/sleep 10
+ExecStart=/usr/bin/auto-pl
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+

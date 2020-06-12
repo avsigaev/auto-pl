@@ -8,12 +8,7 @@ if [[ "$(id -u)" != "0" ]]; then
    exit 1
 fi
 
-if [ -z $(which sonmmon) ]; then
-    echo 'ERROR: SONM Monitor not detected'
-    exit 1
-fi
-
-github_url='https://raw.githubusercontent.com/sonm-io/fan-control'
+github_url='https://raw.githubusercontent.com/avsigaev/auto-pl'
 
 if ! [[ -z $1 ]]; then
 	branch=$1
@@ -21,26 +16,15 @@ else
 	branch='master'
 fi
 
-if [[ -f /usr/bin/sonm-fan-control.sh ]]; then
-	rm /usr/bin/sonm-fan-control.sh
-	rm /usr/bin/sonm-xorg-config.sh
-	rm /etc/sonm/fan-control.txt
-fi
+wget -q ${github_url}/${branch}/auto-pl.cfg -O /etc/sonm/auto-pl.cfg
+wget -q ${github_url}/${branch}/auto-pl.service -O /etc/systemd/system/auto-pl.service
+wget -q ${github_url}/${branch}/auto-pl -O /usr/bin/auto-pl
 
-wget -q ${github_url}/${branch}/fan-control.cfg -O /etc/sonm/fan-control.cfg
-wget -q ${github_url}/${branch}/sonm-xorg-config.service -O /etc/systemd/system/sonm-xorg-config.service
-wget -q ${github_url}/${branch}/sonm-fan-control.service -O /etc/systemd/system/sonm-fan-control.service
-wget -q ${github_url}/${branch}/sonm-fan-control -O /usr/bin/sonm-fan-control
-wget -q ${github_url}/${branch}/sonm-xorg-config -O /usr/bin/sonm-xorg-config
-
-chmod +x /usr/bin/sonm-fan-control
-chmod +x /usr/bin/sonm-xorg-config
+chmod +x /usr/bin/auto-pl
 
 echo Enabling service
 systemctl daemon-reload
-systemctl enable sonm-fan-control.service
-systemctl enable sonm-xorg-config.service
-systemctl restart sonm-mon.service
-systemctl restart sonm-fan-control.service
+systemctl enable auto-pl.service
+systemctl restart auto-pl.service
 
 echo Done
