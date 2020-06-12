@@ -13,23 +13,34 @@ if [ -z $(which sonmmon) ]; then
     exit 1
 fi
 
-github_url='https://raw.githubusercontent.com/avsigaev/fan-control'
-branch='master'
+github_url='https://raw.githubusercontent.com/sonm-io/fan-control'
 
-wget -q ${github_url}/${branch}/fan-control.txt -O /etc/sonm/fan-control.txt
+if ! [[ -z $1 ]]; then
+	branch=$1
+else
+	branch='master'
+fi
+
+if [[ -f /usr/bin/sonm-fan-control.sh ]]; then
+	rm /usr/bin/sonm-fan-control.sh
+	rm /usr/bin/sonm-xorg-config.sh
+	rm /etc/sonm/fan-control.txt
+fi
+
+wget -q ${github_url}/${branch}/fan-control.cfg -O /etc/sonm/fan-control.cfg
 wget -q ${github_url}/${branch}/sonm-xorg-config.service -O /etc/systemd/system/sonm-xorg-config.service
 wget -q ${github_url}/${branch}/sonm-fan-control.service -O /etc/systemd/system/sonm-fan-control.service
-wget -q ${github_url}/${branch}/sonm-fan-control.sh -O /usr/bin/sonm-fan-control.sh
-wget -q ${github_url}/${branch}/sonm-xorg-config.sh -O /usr/bin/sonm-xorg-config.sh
+wget -q ${github_url}/${branch}/sonm-fan-control -O /usr/bin/sonm-fan-control
+wget -q ${github_url}/${branch}/sonm-xorg-config -O /usr/bin/sonm-xorg-config
 
-chmod +x /usr/bin/sonm-fan-control.sh
-chmod +x /usr/bin/sonm-xorg-config.sh
+chmod +x /usr/bin/sonm-fan-control
+chmod +x /usr/bin/sonm-xorg-config
 
 echo Enabling service
 systemctl daemon-reload
 systemctl enable sonm-fan-control.service
 systemctl enable sonm-xorg-config.service
 systemctl restart sonm-mon.service
-systemctl start sonm-fan-control.service
+systemctl restart sonm-fan-control.service
 
 echo Done

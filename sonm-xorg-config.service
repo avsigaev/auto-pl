@@ -5,7 +5,7 @@ Before=multi-user.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/sonm-xorg-config.sh
+ExecStart=/usr/bin/sonm-xorg-config
 
 # starts only on system boot
 
