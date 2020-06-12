@@ -191,7 +191,6 @@ if [[ -z $1 ]]; then
 				HIGH_TEMP_CHECKS[$i]=0
 			fi
 
-			echo "INFO: GPU${i} checks: normal ${NORMAL_TEMP_CHECKS[$i]}, high ${HIGH_TEMP_CHECKS[$i]}"
 			if [[ $MANAGE_PL -eq 1 ]]; then
 				adjust_pl $i $GPU_TEMP
 			fi
