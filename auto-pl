@@ -181,10 +181,10 @@ if [[ -z $1 ]]; then
 
 			if [[ $GPU_TEMP -gt $MAX_TEMP ]]; then
 				echo "WARN: GPU${i} temp ${GPU_TEMP}°C"
-				HIGH_TEMP_CHECKS[$i]=$(( $HIGH_TEMP_CHECKS[$i] + 1 ))
+				HIGH_TEMP_CHECKS[$i]=$(( ${HIGH_TEMP_CHECKS[$i]} + 1 ))
 				NORMAL_TEMP_CHECKS[$i]=0
 			else
-				NORMAL_TEMP_CHECKS[$i]=$(( $NORMAL_TEMP_CHECKS[$i] + 1 ))
+				NORMAL_TEMP_CHECKS[$i]=$(( ${NORMAL_TEMP_CHECKS[$i]} + 1 ))
 				HIGH_TEMP_CHECKS[$i]=0
 			fi
 
