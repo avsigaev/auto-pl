@@ -73,21 +73,6 @@ reload_config() {
 		switch_pl
 	fi
 
-	# check config
-	if [[ $MIN_TEMP -ge $MAX_TEMP ]]; then
-		echo "ERROR: Configuration error, MIN_TEMP>=MAX_TEMP"
-		exit 1
-	elif [[ $MAX_TEMP -ge $CRIT_TEMP ]]; then
-		echo "ERROR: Configuration error, MAX_TEMP>=CRIT_TEMP"
-		exit 1
-	elif [[ $MIN_FAN_SPEED -lt 0 ]]; then
-		echo "ERROR: Configuration error, MIN_FAN_SPEED<=0"
-		exit 1
-	elif [[ $MIN_FAN_SPEED -gt 100 ]]; then
-		echo "ERROR: Configuration error, MIN_FAN_SPEED>=100"
-		exit 1
-	fi
-
 	return 0
 }
 
