@@ -139,14 +139,17 @@ disable_pm() {
 adjust_pl() {
 	# TODO: Handle errors
 	new_pl=0
-
-	if [[ $2 -gt $MAX_TEMP && $HIGH_TEMP_CKECKS[$1] -gt 2 ]]; then
+	echo "INFO: GPU${1} checks: normal ${NORMAL_TEMP_CHECKS[$1]}, high ${HIGH_TEMP_CHECKS[$1]}"
+	if [[ $2 -gt $MAX_TEMP && ${HIGH_TEMP_CHECKS[$1]} -gt 2 ]]; then
+		HIGH_TEMP_CHECKS[$1]=0
 		new_pl=$(( ${pl_current[$1]} - $PL_CHANGE_STEP ))
 		if [[ $new_pl -lt ${pl_min[$1]} ]]; then
+			echo "WARN: PL for GPU${1} is already at minimal value: ${pl_min[$1]}"
 			new_pl=${pl_min[$1]}
 		fi
 
-	elif [[ $2 -lt $MAX_TEMP && $NORMAL_TEMP_CKECKS[$1] -gt 2 ]]; then
+	elif [[ $2 -lt $MAX_TEMP && ${NORMAL_TEMP_CHECKS[$1]} -gt 2 ]]; then
+		NORMAL_TEMP_CHECKS[$1]=0
 		new_pl=$(( ${pl_current[$1]} + $PL_CHANGE_STEP ))
 		if [[ $new_pl -gt ${pl_max[$1]} ]]; then
 			new_pl=${pl_max[$1]}
