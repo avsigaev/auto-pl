@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION="0.1"
+VERSION="0.2"
 
 cleanup() {
     if [[ $FAIL_TO_START -eq 0 ]]; then
@@ -65,6 +65,18 @@ reload_config() {
 	if [[ -z $SETTINGS_TS ]]; then
 		SETTINGS_TS=$(date +%s)
 	fi
+
+	if [ -f /hive-config/autofan.conf ]; then
+		if [[ $(cat /hive-config/autofan.conf | grep ENABLED | cut -d "=" -f 2) > "" ]]; then
+			if [[ $(cat /hive-config/autofan.conf | grep ENABLED | cut -d "=" -f 2) -eq 1 ]]; then
+				MAX_TEMP=$(cat /hive-config/autofan.conf | grep TARGET_TEMP | cut -d "=" -f 2) 
+				echo "Hive auto-fan ENABLED, overriding MAX_TEMP=${MAX_TEMP}"
+			fi
+		else
+			echo "Hive auto-fan DISABLED, using MAX_TEMP from /etc/sonm/auto-pl.cfg"
+		fi
+	fi
+
 	CONFIG_CHANGE_TS=$(stat /etc/sonm/auto-pl.cfg --format='%Y')
 	if [[ $CONFIG_CHANGE_TS -gt $SETTINGS_TS ]]; then
 		echo "INFO: Detected config change"
@@ -140,7 +152,7 @@ adjust_pl() {
 	# TODO: Handle errors
 	new_pl=0
 	echo "INFO: GPU${1} checks: normal ${NORMAL_TEMP_CHECKS[$1]}, high ${HIGH_TEMP_CHECKS[$1]}"
-	if [[ $2 -gt $MAX_TEMP && ${HIGH_TEMP_CHECKS[$1]} -gt 2 ]]; then
+	if [[ $2 -gt $(( $MAX_TEMP +2 )) && ${HIGH_TEMP_CHECKS[$1]} -gt 2 ]]; then
 		HIGH_TEMP_CHECKS[$1]=0
 		new_pl=$(( ${pl_current[$1]} - $PL_CHANGE_STEP ))
 		if [[ $new_pl -lt ${pl_min[$1]} ]]; then
@@ -148,7 +160,7 @@ adjust_pl() {
 			new_pl=${pl_min[$1]}
 		fi
 
-	elif [[ $2 -lt $MAX_TEMP && ${NORMAL_TEMP_CHECKS[$1]} -gt 2 ]]; then
+	elif [[ $2 -lt $(( $MAX_TEMP -2 )) && ${NORMAL_TEMP_CHECKS[$1]} -gt 2 ]]; then
 		NORMAL_TEMP_CHECKS[$1]=0
 		new_pl=$(( ${pl_current[$1]} + $PL_CHANGE_STEP ))
 		if [[ $new_pl -gt ${pl_max[$1]} ]]; then
